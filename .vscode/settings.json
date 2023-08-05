@@ -1,0 +1,14 @@
+{   
+    // editor Settings
+    "editor.fontFamily": "Fira Code, Consolas, 'Courier New', monospace",
+    "editor.cursorBlinking": "expand",
+    "editor.cursorStyle": "line",
+    "editor.cursorWidth": 2,
+    "editor.fontLigatures": true,
+    "editor.fontSize": 14,
+    "editor.lineHeight": 19,
+
+    // tailwind css
+    "css.validate": false,
+    "tailwindCSS.emmetCompletions": true,
+}
