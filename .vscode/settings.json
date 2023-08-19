@@ -11,4 +11,10 @@
     // tailwind css
     "css.validate": false,
     "tailwindCSS.emmetCompletions": true,
+
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.fixAll.tslint": true,
+      "source.organizeImports": true
+    },
 }
