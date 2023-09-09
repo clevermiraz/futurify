@@ -2,6 +2,8 @@
     // editor Settings
     "editor.fontFamily": "Fira Code, Consolas, 'Courier New', monospace",
     "editor.cursorBlinking": "expand",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.detectIndentation": true,
     "editor.cursorStyle": "line",
     "editor.cursorWidth": 2,
     "editor.fontLigatures": true,
