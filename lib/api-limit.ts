@@ -31,3 +31,20 @@ export const checkApiLimit = async () => {
         return false;
     }
 };
+
+export const getApiLimitCount = async () => {
+    const { userId } = auth();
+
+    if (!userId) {
+        return 0;
+    }
+
+    const response = await axios.get(`/user-api-limit/?userId=${userId}`);
+
+    if (!response?.data?.count) {
+        // if There is no count Then It Should there Is NO User Created Yet.
+        return 0;
+    }
+
+    return response?.data?.count;
+};
