@@ -14,11 +14,14 @@ import Loader from "@/components/loader";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useProModal } from "@/hooks/use-pro-modal";
 import { formSchema } from "./constants";
 
 export default function MusicPage() {
     const router = useRouter();
     const [music, setMusic] = useState<string>();
+
+    const proModal = useProModal();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -38,6 +41,9 @@ export default function MusicPage() {
 
             form.reset();
         } catch (error: any) {
+            if (error?.response.status === 403) {
+                proModal.onOpen();
+            }
             console.log(error);
         } finally {
             router.refresh();

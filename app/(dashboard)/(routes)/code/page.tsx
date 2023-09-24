@@ -18,14 +18,15 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UserAvatar } from "@/components/user-avatar";
+import { useProModal } from "@/hooks/use-pro-modal";
 import { cn } from "@/lib/utils";
 import { formSchema } from "./constants";
 
 export default function CodePage() {
     const router = useRouter();
-    const [messages, setMessages] = useState<
-        OpenAI.Chat.CreateChatCompletionRequestMessage[]
-    >([]);
+    const [messages, setMessages] = useState<OpenAI.Chat.CreateChatCompletionRequestMessage[]>([]);
+
+    const proModal = useProModal();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -38,11 +39,10 @@ export default function CodePage() {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const userMessage: OpenAI.Chat.CreateChatCompletionRequestMessage =
-                {
-                    role: "user",
-                    content: values.prompt,
-                };
+            const userMessage: OpenAI.Chat.CreateChatCompletionRequestMessage = {
+                role: "user",
+                content: values.prompt,
+            };
             const newMessages = [...messages, userMessage];
 
             const response = await axios.post("/api/code", {
@@ -53,6 +53,9 @@ export default function CodePage() {
 
             form.reset();
         } catch (error: any) {
+            if (error?.response?.status === 403) {
+                proModal.onOpen();
+            }
             console.log(error);
         } finally {
             router.refresh();
@@ -91,10 +94,7 @@ export default function CodePage() {
                                     </FormItem>
                                 )}
                             />
-                            <Button
-                                className="col-span-12 lg:col-span-2 w-full"
-                                disabled={isLoading}
-                            >
+                            <Button className="col-span-12 lg:col-span-2 w-full" disabled={isLoading}>
                                 Generate
                             </Button>
                         </form>
@@ -103,25 +103,17 @@ export default function CodePage() {
                 <div className="space-y-4 mt-4">
                     {isLoading && <Loader />}
 
-                    {messages.length === 0 && !isLoading && (
-                        <Empty label="No Messages Yet" />
-                    )}
+                    {messages.length === 0 && !isLoading && <Empty label="No Messages Yet" />}
                     <div className="flex flex-col-reverse gap-y-4">
                         {messages.map((message, index) => (
                             <div
                                 key={index}
                                 className={cn(
                                     "p-8 w-full flex items-start gap-x-8 rounded-lg",
-                                    message.role === "user"
-                                        ? "bg-white border border-black/10"
-                                        : "bg-muted"
+                                    message.role === "user" ? "bg-white border border-black/10" : "bg-muted"
                                 )}
                             >
-                                {message.role === "user" ? (
-                                    <UserAvatar />
-                                ) : (
-                                    <BotAvatar />
-                                )}
+                                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
                                 <div className="text-sm">
                                     <ReactMarkdown
                                         components={{
@@ -131,10 +123,7 @@ export default function CodePage() {
                                                 </div>
                                             ),
                                             code: ({ node, ...props }) => (
-                                                <code
-                                                    className="bg-black/10 rounded-lg p-1"
-                                                    {...props}
-                                                />
+                                                <code className="bg-black/10 rounded-lg p-1" {...props} />
                                             ),
                                         }}
                                         className="text-sm overflow-hidden leading-7"

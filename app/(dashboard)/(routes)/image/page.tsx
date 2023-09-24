@@ -17,12 +17,15 @@ import { Card, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useProModal } from "@/hooks/use-pro-modal";
 import { amountOptions, formSchema, resolutionOptions } from "./constants";
 
 export default function ImagePage() {
     const router = useRouter();
 
     const [images, setImages] = useState<string[]>([]);
+
+    const proModal = useProModal();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -46,6 +49,9 @@ export default function ImagePage() {
             setImages(urls);
             form.reset();
         } catch (error: any) {
+            if (error?.response?.status === 403) {
+                proModal.onOpen();
+            }
             console.log(error);
         } finally {
             router.refresh();
