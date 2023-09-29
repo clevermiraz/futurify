@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useProModal } from "@/hooks/use-pro-modal";
 import { amountOptions, formSchema, resolutionOptions } from "./constants";
+import toast from "react-hot-toast";
 
 export default function ImagePage() {
     const router = useRouter();
@@ -51,6 +52,8 @@ export default function ImagePage() {
         } catch (error: any) {
             if (error?.response?.status === 403) {
                 proModal.onOpen();
+            } else {
+                toast.error("Something Went Wrong!");
             }
             console.log(error);
         } finally {

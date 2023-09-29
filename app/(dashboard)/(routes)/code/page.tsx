@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { UserAvatar } from "@/components/user-avatar";
 import { useProModal } from "@/hooks/use-pro-modal";
 import { cn } from "@/lib/utils";
+import toast from "react-hot-toast";
 import { formSchema } from "./constants";
 
 export default function CodePage() {
@@ -55,6 +56,8 @@ export default function CodePage() {
         } catch (error: any) {
             if (error?.response?.status === 403) {
                 proModal.onOpen();
+            } else {
+                toast.error("Something Went Wrong!");
             }
             console.log(error);
         } finally {

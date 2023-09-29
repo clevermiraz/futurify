@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useProModal } from "@/hooks/use-pro-modal";
+import toast from "react-hot-toast";
 import { formSchema } from "./constants";
 
 export default function MusicPage() {
@@ -43,6 +44,8 @@ export default function MusicPage() {
         } catch (error: any) {
             if (error?.response.status === 403) {
                 proModal.onOpen();
+            } else {
+                toast.error("Something Went Wrong!");
             }
             console.log(error);
         } finally {
